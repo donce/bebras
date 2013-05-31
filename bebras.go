@@ -206,7 +206,7 @@ func outputJson(programs []*program, doors map[coordinates]bool, players []playe
 	output, err := json.Marshal(struct {
 		Players []player
 		Figures []figure
-		Doors []door
+		Doors   []door
 	}{players, figures, doorSlice})
 	if err != nil {
 		panic(err)
