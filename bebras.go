@@ -107,7 +107,7 @@ func main() {
 		if len(tokens) != 5 {
 			panic("Invalid player definition")
 		}
-		players[i].Name = tokens[4]
+		players = append(players, player{Name: tokens[4], Color: i})
 		for j := 0; j < 2; j++ {
 			players[i].programs[j] = &program{
 				coordinates: rndCoords(),
@@ -117,7 +117,6 @@ func main() {
 			}
 			programs = append(programs, players[i].programs[j])
 		}
-		players[i].Color = i
 	}
 	if *D >= len(players) {
 		panic("There should be less doors than players")
