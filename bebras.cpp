@@ -66,7 +66,7 @@ int main() {
 	for (int i = 0; i < 2/*programs.size()*/; ++i) {
 		cout << "Starting program: " << programs[i].name << endl;
 		char bin[255];
-		sprintf(bin, TEMP_DIR"bin%d", i);
+		sprintf(bin, TEMP_DIR"user_bin%d", i);
 		if (!compile(programs[i].filename.c_str(), bin)) {
 			cout << "Compile error" << endl;
 			continue;
@@ -85,7 +85,7 @@ int main() {
 			}
 			char command[255];
 			fdata << fifoOut << ' ' << fifoIn << ' ';
-			sprintf(command, "./%s < %s > %s &", bin, fifoIn, fifoOut);
+			sprintf(command, "%s < %s > %s &", bin, fifoIn, fifoOut);
 			system(command);
 		}
 		fdata << programs[i].name << endl;
