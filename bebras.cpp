@@ -85,7 +85,7 @@ int main() {
 			}
 			char command[255];
 			fdata << fifoOut << ' ' << fifoIn << ' ';
-			sprintf(command, "%s < %s > %s &", bin, fifoIn, fifoOut);
+			sprintf(command, "%s > %s < %s &", bin, fifoOut, fifoIn);
 			system(command);
 		}
 		fdata << programs[i].name << endl;
