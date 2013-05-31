@@ -99,11 +99,6 @@ func main() {
 		panic("More doors than cells")
 	}
 	data := open(flag.Arg(0))
-	var N int
-	fmt.Fscan(data, &N)
-	if *D >= N {
-		panic("More doors than players")
-	}
 	var players []player
 	var programs []*program
 	scanner := bufio.NewScanner(data)
@@ -124,6 +119,9 @@ func main() {
 		}
 		players[i].Color = i
 	}
+	if *D >= len(players) {
+		panic("There should be less doors than players")
+	}
 	perm := rand.Perm(len(programs))
 	if err := scanner.Err(); err != nil {
 		panic(err)
@@ -138,7 +136,7 @@ func main() {
 		}
 	}
 	outputJson(programs, doors, players)
-	running = N
+	running = len(players)
 	openDoors := *D
 	for id := 0; openDoors > 0 && running > 0; id = (id + 1) % len(programs) {
 		p := programs[perm[id]]
