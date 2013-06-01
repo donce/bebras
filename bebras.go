@@ -82,7 +82,7 @@ type program struct {
 }
 
 func (p *program) kill() {
-	err := exec.Command("kill", "-9", "-p", strconv.Itoa(p.pid)).Run()
+	err := exec.Command("kill", "-9", strconv.Itoa(p.pid)).Run()
 	if err != nil {
 		log.Println("Error killing", p, "process:", err)
 	}
