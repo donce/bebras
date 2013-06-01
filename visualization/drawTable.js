@@ -17,16 +17,17 @@
 	
 	var GAME_TABLE_PARENT_ID='tableSection';
 	var BOARD_TABLE_PARENT_ID='boardSection';
-	var ROW='tr';
-	var CELL='td';
-        var DISPLAY_COLORS = true;
 	var GAME_TABLE_ID = 'gameTable';
 	var BOARD_TABLE_ID = 'boardTable';
 	var TABLE_CLASS = 'insideTable';
 	var DELAY_TIME = 1000;
-	var DOORS_OPEN_COLOR = '#00FF00';
-	var DOORS_CLOSE_COLOR = '#FF0000';
+	var DOORS_OPEN_CLASSNAME = 'openedDoors';
+	var DOORS_CLOSE_CLASSNAME = 'closedDoors';
 
+
+	var ROW='tr';
+	var CELL='td';
+        var DISPLAY_COLORS = true;
 
 	function destroyTable(tableId) {
 		try {
@@ -68,13 +69,15 @@
 	function addDoorsToCell(x, y, open){
 		try {
 			var cell = getCell(x, y);
-			var borderColor;
+			var className;
 			if (open) {
-				borderColor = DOORS_OPEN_COLOR;
+				className = DOORS_OPEN_CLASSNAME;
 			}else {
-				borderColor = DOORS_CLOSE_COLOR;
+				className = DOORS_CLOSE_CLASSNAME;
 			}
-			cell.style.borderColor = borderColor; 
+			cell.className = className; 
+			//alert(cell.className);
+
 		}catch(error) {
 				//alert(error);
 		}
@@ -192,7 +195,7 @@
 
 	//game states
 	var game = [
-{"players":[{"color":0,"name":"Martynas","state":"Veikia"},{"color":1,"name":"Martynas","state":"Veikia"}],"figures":[{"x":2,"y":1,"color":0},{"x":4,"y":2,"color":0},{"x":5,"y":5,"color":1},{"x":3,"y":5,"color":1}],"doors":[{"x":4,"y":4,"open":true}]}
+{"players":[{"color":0,"name":"Martynas","state":"Veikia"},{"color":1,"name":"Martynas","state":"Veikia"}],"figures":[{"x":1,"y":1,"color":0},{"x":1,"y":1,"color":0},{"x":1,"y":1,"color":1},{"x":1,"y":1,"color":1}],"doors":[{"x":4,"y":4,"open":true}]}
 ,
 {"players":[{"color":0,"name":"Martynas","state":"Veikia"},{"color":1,"name":"Martynas","state":"Veikia"}],"figures":[{"x":2,"y":1,"color":0},{"x":4,"y":2,"color":0},{"x":5,"y":5,"color":1},{"x":4,"y":5,"color":1}],"doors":[{"x":4,"y":4,"open":true}]}
 ,
