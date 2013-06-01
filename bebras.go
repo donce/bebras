@@ -202,7 +202,7 @@ func main() {
 				fmt.Fprintln(p.output, id2+1, p2.x, p2.y)
 			}
 		}
-		fmt.Fprintln(p.output, len(doors))
+		fmt.Fprintln(p.output, openDoors)
 		for d, open := range doors {
 			if open {
 				fmt.Fprintln(p.output, d.x, d.y)

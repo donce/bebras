@@ -16,19 +16,10 @@ tr {
 div.insideTable {
 	float:left;	
 	border:1px solid black; 
-	/*height: 20%;*/
-	/*width: 20%;*/
 	overflow: hidden;
+	border-spacing:1px;
 }
 
-
-div.insideTable {
-	float:left;	
-	border:1px solid black; 
-	/*height: 20%;*/
-	/*width: 20%;*/
-	overflow: hidden;
-}
 
 
 table {
@@ -40,19 +31,16 @@ table {
 
 table[id='gameTable']  td.closedDoors {
 	border: 5px solid red;
-	/*border-color: red;*/
-	/*border-style: solid;*/
 }
 
 
 table[id='gameTable'] td.openedDoors {
 	border: 5px solid green;
-	/*border-color: red;*/
-	/*border-style: solid;*/
 }
 
 table[id='gameTable']  td {
-	border:3px solid black; 
+	/*border:1px solid black; */
+	border: none;
 	width: 50px;
 	height: 50px;
 }
