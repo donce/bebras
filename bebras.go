@@ -51,12 +51,19 @@ var running int
 
 func (p *player) kill() {
 	p.State = StateKilled
-	running--
+	p.stop()
 }
 
 func (p *player) win() {
 	p.State = StateWon
+	p.stop()
+}
+
+func (p *player) stop() {
 	running--
+	for _, pr := range p.programs {
+		pr.kill()
+	}
 }
 
 func (p *player) met() bool {
@@ -72,6 +79,13 @@ type program struct {
 	input, output *os.File
 	player        *player
 	pid           int
+}
+
+func (p *program) kill() {
+	err := exec.Command(fmt.Sprintf("kill -9 -p %d", p.pid)).Run()
+	if err != nil {
+		log.Println("Error killing", p, "process")
+	}
 }
 
 func (p *program) time() float64 {
