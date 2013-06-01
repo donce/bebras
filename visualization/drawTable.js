@@ -126,10 +126,8 @@
 			addPlayerToCell(game.figures[j].x, game.figures[j].y, game.figures[j].color);	
 		}
 	}
-	function drawTable(){
+	function drawTable(columnsCount, rowsCount){
 		try {
-			var columnsCount=10;
-			var rowsCount=10;
 			var root=document.getElementById(GAME_TABLE_PARENT_ID);
 			var table=document.createElement('table');
 			table.id=GAME_TABLE_ID;
@@ -149,7 +147,50 @@
 		}
 	}
 
-	//var figures = [{'x':1, 'y':1, 'color':2}, {'x':1, 'y':3, 'color':5}, {'x':1, 'y':1, 'color':6}];
+	function setSize(element, sizePercentege) {
+		try {
+			element.style.height = sizePercentege + "%"; 
+			element.style.width = sizePercentege + "%";
+		}catch(error) {
+		
+		}
+	}
+
+	function adjustCellDivSize (cell) {
+		try {
+			var cellDivs = cell.getElementsByTagName('div');
+			var figuresInCell = cellDivs.length;
+			var size;
+			if (figuresInCell > 0) {
+				size = 100/parseInt(figuresInCell, 10);
+			}else {
+				size = 0;
+			}
+			//alert(size);
+			for(var i = 0; i < cellDivs.length; i++) {
+				setSize(cellDivs[i], size);
+			}	
+		}catch(error) {
+		}
+	}
+
+	function adjustFiguresSize() {
+		try {
+			var table = document.getElementById(GAME_TABLE_ID);	
+			var cells = table.getElementsByTagName(CELL);
+			for(var i = 0; i < cells.length; i++) {
+				adjustCellDivSize(cells[i]);
+			}
+		}catch(error){
+		
+		}
+	}
+	
+	// table size parameters
+	var COLUMNS_COUNT = 10;
+	var ROWS_COUNT = 5;
+
+	//game states
 	var game = [
 {"players":[{"color":0,"name":"Martynas","state":"Veikia"},{"color":1,"name":"Martynas","state":"Veikia"}],"figures":[{"x":2,"y":1,"color":0},{"x":4,"y":2,"color":0},{"x":5,"y":5,"color":1},{"x":3,"y":5,"color":1}],"doors":[{"x":4,"y":4,"open":true}]}
 ,
@@ -171,7 +212,6 @@
 ,
 ]
 
-
 	var intervalHandler;
 
 	function run() {
@@ -186,9 +226,10 @@
 						//alert(index);
 						destroyTable(GAME_TABLE_ID);
 						destroyTable(BOARD_TABLE_ID);
-						drawTable();
+						drawTable(COLUMNS_COUNT, ROWS_COUNT);
 						modifieGameTable(game[index]);
 						drawPlayerTable(game[index].players);
+						adjustFiguresSize();				
 						index++;
 					}
 			, DELAY_TIME);
