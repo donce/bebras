@@ -144,7 +144,7 @@ func main() {
 		panic("More doors than cells")
 	}
 	data := open(flag.Arg(0))
-	var players []player
+	var players []*player
 	var programs []*program
 	scanner := bufio.NewScanner(data)
 	for i := 0; scanner.Scan(); i++ {
@@ -152,7 +152,7 @@ func main() {
 		if len(tokens) != 7 {
 			panic("Invalid player definition")
 		}
-		players = append(players, player{Name: tokens[6], Color: i})
+		players = append(players, &player{Name: tokens[6], Color: i})
 		for j := 0; j < 2; j++ {
 			pid, err := strconv.Atoi(tokens[j*3])
 			if err != nil {
@@ -162,7 +162,7 @@ func main() {
 				coordinates: rndCoords(),
 				output:      create(tokens[j*3+2]),
 				input:       open(tokens[j*3+1]),
-				player:      &players[i],
+				player:      players[i],
 				pid:         pid,
 			}
 			fmt.Fprintln(players[i].programs[j].output, *W, *H)
@@ -239,7 +239,7 @@ func main() {
 		case "V":
 			p.y++
 			if p.y > *H {
-				p.y = *H
+				p.y = 1
 			}
 		case "K":
 			p.x--
@@ -249,7 +249,7 @@ func main() {
 		case "D":
 			p.x++
 			if p.x > *W {
-				p.x = 0
+				p.x = 1
 			}
 		case "S":
 		default:
@@ -264,9 +264,9 @@ func main() {
 		outputJson(programs, doors, players)
 	}
 	fmt.Println("]")
-	for i := range players {
-		if players[i].State == StateRunning {
-			players[i].stop()
+	for _, p := range players {
+		if p.State == StateRunning {
+			p.stop()
 		}
 	}
 }
@@ -283,7 +283,7 @@ type door struct {
 	Open bool `json:"open"`
 }
 
-func outputJson(programs []*program, doors map[coordinates]bool, players []player) {
+func outputJson(programs []*program, doors map[coordinates]bool, players []*player) {
 	var figures []figure
 	for _, p := range programs {
 		if p.player.State == StateRunning {
@@ -295,7 +295,7 @@ func outputJson(programs []*program, doors map[coordinates]bool, players []playe
 		doorSlice = append(doorSlice, door{c.x, c.y, state})
 	}
 	output, err := json.Marshal(struct {
-		Players []player `json:"players"`
+		Players []*player `json:"players"`
 		Figures []figure `json:"figures"`
 		Doors   []door   `json:"doors"`
 	}{players, figures, doorSlice})
