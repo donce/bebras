@@ -25,6 +25,8 @@ int main()
 			doors.push_back(make_pair(x, y));
 		}
 		sort(doors.begin(), doors.end());
+		x = doors[0].first;
+		y = doors[0].second;
 		if (x0 == x && y0 == y)
 		{
 			puts("S");
