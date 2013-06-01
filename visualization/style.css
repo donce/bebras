@@ -39,7 +39,8 @@ table[id='gameTable'] td.openedDoors {
 }
 
 table[id='gameTable']  td {
-	border:1px solid black; 
+	/*border:1px solid black; */
+	border: none;
 	width: 50px;
 	height: 50px;
 }
