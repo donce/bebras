@@ -84,7 +84,7 @@ type program struct {
 func (p *program) kill() {
 	err := exec.Command("kill", "-9", "-p", strconv.Itoa(p.pid)).Run()
 	if err != nil {
-		log.Println("Error killing", p, "process")
+		log.Println("Error killing", p, "process:", err)
 	}
 }
 
@@ -264,7 +264,9 @@ func main() {
 	}
 	fmt.Println("]")
 	for i := range players {
-		players[i].stop()
+		if players[i].State == StateRunning {
+			players[i].stop()
+		}
 	}
 }
 
