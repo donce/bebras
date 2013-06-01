@@ -239,7 +239,7 @@ func main() {
 		case "V":
 			p.y++
 			if p.y > *H {
-				p.y = *H
+				p.y = 1
 			}
 		case "K":
 			p.x--
@@ -249,7 +249,7 @@ func main() {
 		case "D":
 			p.x++
 			if p.x > *W {
-				p.x = 0
+				p.x = 1
 			}
 		case "S":
 		default:
