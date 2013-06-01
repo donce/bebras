@@ -22,13 +22,22 @@ div.insideTable {
 
 
 table {
+	float:left;	
 	margin:auto;
 	border:2px solid black; 
 }
 
-td {
+table[id='gameTable']  td {
 	border:1px solid black; 
 	width: 50px;
 	height: 50px;
 }
 
+
+table[id='boardTable']  td {
+	border:1px solid black; 
+}
+
+td.boardColorCell {
+	width: 20%;	
+}

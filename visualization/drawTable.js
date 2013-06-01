@@ -92,13 +92,14 @@
 			var row, cell;
 			for(var i=0;i<rowsCount;i++){
 				row=document.createElement(ROW);
-				var name = players[i].name;
-				var colorIndex = players[i].color;
-				var state = players[i].state;
+				var name = document.createTextNode(players[i].name);
+				var colorIndex = parseInt(players[i].color, 10);
+				var state = document.createTextNode(players[i].state);
 				for(var j=0;j<columnsCount;j++){
 					cell=document.createElement(CELL);
 					if (j == 0) {
 						cell.style.backgroundColor = colors[colorIndex];		
+						cell.className = 'boardColorCell';
 					}else if (j == 1) {
 						cell.appendChild(name);
 					}else {
