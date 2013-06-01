@@ -4,10 +4,12 @@
 #include <vector>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <unistd.h>
 
 #define INPUT_FILE "input"
 #define LOGIC_FILE "bebras.go"
 #define DATA_FILE "data"
+#define PLAYERS_DIR "players/"
 
 #define TEMP_DIR "temp/"
 
@@ -44,15 +46,18 @@ string getExtension(const char *filename) {
 }
 
 bool compile(const char *source, const char *binary) {
+	cout << "-----------------------------------" << endl;
+	cout << "Compiling " << source << endl;
 	char command[255];
 	string ext = getExtension(source);
 	if (ext == "pas") {
-		sprintf(command, "fpc -o%s %s", binary, source);
+		sprintf(command, "fpc -o%s players/%s", binary, source);
 	}
 	else if (ext == "cpp" || ext == "c") {
-		sprintf(command, "g++ -o %s %s", binary, source);
+		sprintf(command, "g++ -o %s players/%s", binary, source);
 	}
 	int result = system(command);
+	cout << "-----------------------------------" << endl;
 	return (result == 0);
 }
 
@@ -64,13 +69,14 @@ int main() {
 
 	ofstream fdata(TEMP_DIR DATA_FILE);
 	for (int i = 0; i < programs.size(); ++i) {
-		cout << "Starting program: " << programs[i].name << endl;
 		char bin[255];
 		sprintf(bin, TEMP_DIR"user_bin%d", i);
 		if (!compile(programs[i].filename.c_str(), bin)) {
+			cout << ">>>>>>>>> Failed to compile: " << programs[i].filename << endl;
 			cout << "Compile error" << endl;
 			continue;
 		}
+		//cout << "Starting program: " << programs[i].name << endl;
 		for (int j = 0; j < 2; ++j) {
 			char fifoIn[255], fifoOut[255];
 			sprintf(fifoIn, TEMP_DIR"fifo_%d_%d_in", i, j);
@@ -84,9 +90,20 @@ int main() {
 				return 0;
 			}
 			char command[255];
-			fdata << fifoOut << ' ' << fifoIn << ' ';
 			sprintf(command, "%s > %s < %s &", bin, fifoOut, fifoIn);
-			system(command);
+			pid_t pid = fork();
+			if (pid == 0) {
+				freopen(fifoIn, "r", stdin);
+				freopen(fifoOut, "w", stdout);
+				execl(bin, "bebras", (char*)0);
+				cout << "child " << bin << endl;
+				return 0;
+			}
+			else {
+				fdata << pid << ' ';
+			}
+			fdata << fifoOut << ' ' << fifoIn << ' ';
+			//cout << "ID:" << system(command) << endl;
 		}
 		fdata << programs[i].name << endl;
 	}
