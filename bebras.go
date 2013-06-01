@@ -133,20 +133,20 @@ func main() {
 	var programs []*program
 	scanner := bufio.NewScanner(data)
 	for i := 0; scanner.Scan(); i++ {
-		tokens := strings.SplitN(scanner.Text(), " ", 6)
-		if len(tokens) != 6 {
+		tokens := strings.SplitN(scanner.Text(), " ", 7)
+		if len(tokens) != 7 {
 			panic("Invalid player definition")
 		}
 		players = append(players, player{Name: tokens[4], Color: i})
-		pid, err := strconv.Atoi(tokens[0])
 		if err != nil {
 			panic("Invalid PID")
 		}
 		for j := 0; j < 2; j++ {
+			pid, err := strconv.Atoi(tokens[j*3])
 			players[i].programs[j] = &program{
 				coordinates: rndCoords(),
-				output:      create(tokens[j*2+2]),
-				input:       open(tokens[j*2+1]),
+				output:      create(tokens[j*3+2]),
+				input:       open(tokens[j*3+1]),
 				player:      &players[i],
 				pid:         pid,
 			}
