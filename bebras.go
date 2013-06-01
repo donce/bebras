@@ -138,11 +138,11 @@ func main() {
 			panic("Invalid player definition")
 		}
 		players = append(players, player{Name: tokens[4], Color: i})
-		if err != nil {
-			panic("Invalid PID")
-		}
 		for j := 0; j < 2; j++ {
 			pid, err := strconv.Atoi(tokens[j*3])
+			if err != nil {
+				panic("Invalid PID")
+			}
 			players[i].programs[j] = &program{
 				coordinates: rndCoords(),
 				output:      create(tokens[j*3+2]),
@@ -205,7 +205,7 @@ func main() {
 		}()
 		for repeat := true; repeat; {
 			select {
-			case success := <-ch:
+			case <-ch:
 				repeat = false
 			case <-ticker:
 				if p.time()-start > 1 {
