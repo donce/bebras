@@ -63,7 +63,7 @@ int main() {
 	system("mkdir temp");
 
 	ofstream fdata(TEMP_DIR DATA_FILE);
-	for (int i = 0; i < 2/*programs.size()*/; ++i) {
+	for (int i = 0; i < programs.size(); ++i) {
 		cout << "Starting program: " << programs[i].name << endl;
 		char bin[255];
 		sprintf(bin, TEMP_DIR"user_bin%d", i);
@@ -94,7 +94,13 @@ int main() {
 
 	cout << "Starting logic" << endl;
 	char command[255];
-	sprintf(command, "go run %s -w %d -h %d -d %d %s", LOGIC_FILE, width, height, doors, TEMP_DIR DATA_FILE);
+	//TODO:tee?
+	//system("rm open.js");
+	system("echo 'var game = ' > visualization/generated.js");
+	sprintf(command, "go run %s -w %d -h %d -d %d %s | tee -a 'visualization/generated.js'", LOGIC_FILE, width, height, doors, TEMP_DIR DATA_FILE);
 	system(command);
+	system("cat visualization/drawTable.js >> visualization/generated.js");
+	cout << "Finished." << endl;
+	system("xdg-open visualization/generated.html");
 	return 0;
 }

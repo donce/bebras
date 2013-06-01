@@ -39,7 +39,8 @@
 
 	function getCell(x, y) {
 		try {
-			var rows = document.getElementsByTagName(ROW);
+			var table = document.getElementById(GAME_TABLE_ID);
+			var rows = table.getElementsByTagName(ROW);
 			var row = rows[parseInt(x, 10) - 1];
 			var cells = row.getElementsByTagName(CELL);
 			var cell = cells[parseInt(y, 10) - 1];
@@ -53,6 +54,7 @@
 	function addPlayerToCell(x, y, colorIndex){
 		try {
 			var cell = getCell(x, y);
+			//alert(cell);
 			var div = document.createElement('div');
 			div.style.backgroundColor = colors[colorIndex];
 			div.className = TABLE_CLASS;
@@ -90,13 +92,14 @@
 			var row, cell;
 			for(var i=0;i<rowsCount;i++){
 				row=document.createElement(ROW);
-				var name = players[i].name;
-				var colorIndex = players[i].color;
-				var state = players[i].state;
+				var name = document.createTextNode(players[i].name);
+				var colorIndex = parseInt(players[i].color, 10);
+				var state = document.createTextNode(players[i].state);
 				for(var j=0;j<columnsCount;j++){
 					cell=document.createElement(CELL);
 					if (j == 0) {
 						cell.style.backgroundColor = colors[colorIndex];		
+						cell.className = 'boardColorCell';
 					}else if (j == 1) {
 						cell.appendChild(name);
 					}else {
@@ -147,7 +150,28 @@
 	}
 
 	//var figures = [{'x':1, 'y':1, 'color':2}, {'x':1, 'y':3, 'color':5}, {'x':1, 'y':1, 'color':6}];
-	//var game = {'figures':figure\c s};
+	var game = [
+{"players":[{"color":0,"name":"Martynas","state":"Veikia"},{"color":1,"name":"Martynas","state":"Veikia"}],"figures":[{"x":2,"y":1,"color":0},{"x":4,"y":2,"color":0},{"x":5,"y":5,"color":1},{"x":3,"y":5,"color":1}],"doors":[{"x":4,"y":4,"open":true}]}
+,
+{"players":[{"color":0,"name":"Martynas","state":"Veikia"},{"color":1,"name":"Martynas","state":"Veikia"}],"figures":[{"x":2,"y":1,"color":0},{"x":4,"y":2,"color":0},{"x":5,"y":5,"color":1},{"x":4,"y":5,"color":1}],"doors":[{"x":4,"y":4,"open":true}]}
+,
+{"players":[{"color":0,"name":"Martynas","state":"Veikia"},{"color":1,"name":"Martynas","state":"Veikia"}],"figures":[{"x":2,"y":1,"color":0},{"x":4,"y":3,"color":0},{"x":5,"y":5,"color":1},{"x":4,"y":5,"color":1}],"doors":[{"x":4,"y":4,"open":true}]}
+,
+{"players":[{"color":0,"name":"Martynas","state":"Veikia"},{"color":1,"name":"Martynas","state":"Veikia"}],"figures":[{"x":3,"y":1,"color":0},{"x":4,"y":3,"color":0},{"x":5,"y":5,"color":1},{"x":4,"y":5,"color":1}],"doors":[{"x":4,"y":4,"open":true}]}
+,
+{"players":[{"color":0,"name":"Martynas","state":"Veikia"},{"color":1,"name":"Martynas","state":"Veikia"}],"figures":[{"x":3,"y":1,"color":0},{"x":4,"y":3,"color":0},{"x":4,"y":5,"color":1},{"x":4,"y":5,"color":1}],"doors":[{"x":4,"y":4,"open":true}]}
+,
+{"players":[{"color":0,"name":"Martynas","state":"Veikia"},{"color":1,"name":"Martynas","state":"Veikia"}],"figures":[{"x":3,"y":1,"color":0},{"x":4,"y":3,"color":0},{"x":4,"y":5,"color":1},{"x":4,"y":4,"color":1}],"doors":[{"x":4,"y":4,"open":true}]}
+,
+{"players":[{"color":0,"name":"Martynas","state":"Veikia"},{"color":1,"name":"Martynas","state":"Veikia"}],"figures":[{"x":3,"y":1,"color":0},{"x":4,"y":4,"color":0},{"x":4,"y":5,"color":1},{"x":4,"y":4,"color":1}],"doors":[{"x":4,"y":4,"open":true}]}
+,
+{"players":[{"color":0,"name":"Martynas","state":"Veikia"},{"color":1,"name":"Martynas","state":"Veikia"}],"figures":[{"x":4,"y":1,"color":0},{"x":4,"y":4,"color":0},{"x":4,"y":5,"color":1},{"x":4,"y":4,"color":1}],"doors":[{"x":4,"y":4,"open":true}]}
+,
+{"players":[{"color":0,"name":"Martynas","state":"Veikia"},{"color":1,"name":"Martynas","state":"Laimėjo"}],"figures":[{"x":4,"y":1,"color":0},{"x":4,"y":4,"color":0}],"doors":[{"x":4,"y":4,"open":false}]}
+,
+]
+
+
 	var intervalHandler;
 
 	function run() {
