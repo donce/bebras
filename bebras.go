@@ -82,7 +82,7 @@ type program struct {
 }
 
 func (p *program) kill() {
-	err := exec.Command("kill", "-9", "-p", strconv.Itoa(p.pid)).Run()
+	err := exec.Command("kill", "-9", strconv.Itoa(p.pid)).Run()
 	if err != nil {
 		log.Println("Error killing", p, "process:", err)
 	}
@@ -152,7 +152,7 @@ func main() {
 		if len(tokens) != 7 {
 			panic("Invalid player definition")
 		}
-		players = append(players, player{Name: tokens[4], Color: i})
+		players = append(players, player{Name: tokens[6], Color: i})
 		for j := 0; j < 2; j++ {
 			pid, err := strconv.Atoi(tokens[j*3])
 			if err != nil {
@@ -194,6 +194,7 @@ func main() {
 		if p.player.State != StateRunning {
 			continue
 		}
+		log.Println(p.player.Name, "turn")
 		fmt.Fprintln(p.output, running*2)
 		fmt.Fprintln(p.output, id+1, p.x, p.y)
 		for id2, i := range perm {
@@ -201,7 +202,7 @@ func main() {
 				fmt.Fprintln(p.output, id2+1, p2.x, p2.y)
 			}
 		}
-		fmt.Fprintln(p.output, len(doors))
+		fmt.Fprintln(p.output, openDoors)
 		for d, open := range doors {
 			if open {
 				fmt.Fprintln(p.output, d.x, d.y)
