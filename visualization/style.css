@@ -13,7 +13,7 @@ tr {
 	 /*[>margin-right:auto;<]*/
 /*}*/
 
-div.cellDiv {
+div.insideTable {
 	float:left;	
 	height: 20%;
 	width: 20%;

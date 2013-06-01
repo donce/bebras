@@ -39,7 +39,8 @@
 
 	function getCell(x, y) {
 		try {
-			var rows = document.getElementsByTagName(ROW);
+			var table = document.getElementById(GAME_TABLE_ID);
+			var rows = table.getElementsByTagName(ROW);
 			var row = rows[parseInt(x, 10) - 1];
 			var cells = row.getElementsByTagName(CELL);
 			var cell = cells[parseInt(y, 10) - 1];
@@ -53,6 +54,7 @@
 	function addPlayerToCell(x, y, colorIndex){
 		try {
 			var cell = getCell(x, y);
+			//alert(cell);
 			var div = document.createElement('div');
 			div.style.backgroundColor = colors[colorIndex];
 			div.className = TABLE_CLASS;
