@@ -51,12 +51,19 @@ var running int
 
 func (p *player) kill() {
 	p.State = StateKilled
-	running--
+	p.stop()
 }
 
 func (p *player) win() {
 	p.State = StateWon
+	p.stop()
+}
+
+func (p *player) stop() {
 	running--
+	for _, pr := range p.programs {
+		pr.kill()
+	}
 }
 
 func (p *player) met() bool {
@@ -74,13 +81,21 @@ type program struct {
 	pid           int
 }
 
+func (p *program) kill() {
+	err := exec.Command("kill", "-9", "-p", strconv.Itoa(p.pid)).Run()
+	if err != nil {
+		log.Println("Error killing", p, "process:", err)
+	}
+}
+
 func (p *program) time() float64 {
-	out, err := exec.Command(fmt.Sprintf("ps -p %d -o time | tail -n 1", p.pid)).Output()
+	out, err := exec.Command("ps", "-p", strconv.Itoa(p.pid), "-o", "time").Output()
 	if err != nil {
 		log.Println("Program", p, "time check failed:", err)
 		return -1
 	}
-	parts := strings.Split(string(out), ":")
+	lines := strings.Split(string(out), "\n")
+	parts := strings.Split(lines[1], ":")
 	if len(parts) == 0 {
 		log.Println("Program", p, "time check failed:", err)
 		return -1
@@ -133,20 +148,20 @@ func main() {
 	var programs []*program
 	scanner := bufio.NewScanner(data)
 	for i := 0; scanner.Scan(); i++ {
-		tokens := strings.SplitN(scanner.Text(), " ", 6)
-		if len(tokens) != 6 {
+		tokens := strings.SplitN(scanner.Text(), " ", 7)
+		if len(tokens) != 7 {
 			panic("Invalid player definition")
 		}
 		players = append(players, player{Name: tokens[4], Color: i})
-		pid, err := strconv.Atoi(tokens[0])
-		if err != nil {
-			panic("Invalid PID")
-		}
 		for j := 0; j < 2; j++ {
+			pid, err := strconv.Atoi(tokens[j*3])
+			if err != nil {
+				panic("Invalid PID")
+			}
 			players[i].programs[j] = &program{
 				coordinates: rndCoords(),
-				output:      create(tokens[j*2+2]),
-				input:       open(tokens[j*2+1]),
+				output:      create(tokens[j*3+2]),
+				input:       open(tokens[j*3+1]),
 				player:      &players[i],
 				pid:         pid,
 			}
@@ -205,7 +220,7 @@ func main() {
 		}()
 		for repeat := true; repeat; {
 			select {
-			case success := <-ch:
+			case <-ch:
 				repeat = false
 			case <-ticker:
 				if p.time()-start > 1 {
@@ -248,6 +263,11 @@ func main() {
 		outputJson(programs, doors, players)
 	}
 	fmt.Println("]")
+	for i := range players {
+		if players[i].State == StateRunning {
+			players[i].stop()
+		}
+	}
 }
 
 type figure struct {
