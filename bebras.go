@@ -262,6 +262,9 @@ func main() {
 		outputJson(programs, doors, players)
 	}
 	fmt.Println("]")
+	for i := range players {
+		players[i].stop()
+	}
 }
 
 type figure struct {
