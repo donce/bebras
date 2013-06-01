@@ -147,7 +147,28 @@
 	}
 
 	//var figures = [{'x':1, 'y':1, 'color':2}, {'x':1, 'y':3, 'color':5}, {'x':1, 'y':1, 'color':6}];
-	//var game = {'figures':figure\c s};
+	var game = [
+{"players":[{"color":0,"name":"Martynas","state":"Veikia"},{"color":1,"name":"Martynas","state":"Veikia"}],"figures":[{"x":2,"y":1,"color":0},{"x":4,"y":2,"color":0},{"x":5,"y":5,"color":1},{"x":3,"y":5,"color":1}],"doors":[{"x":4,"y":4,"open":true}]}
+,
+{"players":[{"color":0,"name":"Martynas","state":"Veikia"},{"color":1,"name":"Martynas","state":"Veikia"}],"figures":[{"x":2,"y":1,"color":0},{"x":4,"y":2,"color":0},{"x":5,"y":5,"color":1},{"x":4,"y":5,"color":1}],"doors":[{"x":4,"y":4,"open":true}]}
+,
+{"players":[{"color":0,"name":"Martynas","state":"Veikia"},{"color":1,"name":"Martynas","state":"Veikia"}],"figures":[{"x":2,"y":1,"color":0},{"x":4,"y":3,"color":0},{"x":5,"y":5,"color":1},{"x":4,"y":5,"color":1}],"doors":[{"x":4,"y":4,"open":true}]}
+,
+{"players":[{"color":0,"name":"Martynas","state":"Veikia"},{"color":1,"name":"Martynas","state":"Veikia"}],"figures":[{"x":3,"y":1,"color":0},{"x":4,"y":3,"color":0},{"x":5,"y":5,"color":1},{"x":4,"y":5,"color":1}],"doors":[{"x":4,"y":4,"open":true}]}
+,
+{"players":[{"color":0,"name":"Martynas","state":"Veikia"},{"color":1,"name":"Martynas","state":"Veikia"}],"figures":[{"x":3,"y":1,"color":0},{"x":4,"y":3,"color":0},{"x":4,"y":5,"color":1},{"x":4,"y":5,"color":1}],"doors":[{"x":4,"y":4,"open":true}]}
+,
+{"players":[{"color":0,"name":"Martynas","state":"Veikia"},{"color":1,"name":"Martynas","state":"Veikia"}],"figures":[{"x":3,"y":1,"color":0},{"x":4,"y":3,"color":0},{"x":4,"y":5,"color":1},{"x":4,"y":4,"color":1}],"doors":[{"x":4,"y":4,"open":true}]}
+,
+{"players":[{"color":0,"name":"Martynas","state":"Veikia"},{"color":1,"name":"Martynas","state":"Veikia"}],"figures":[{"x":3,"y":1,"color":0},{"x":4,"y":4,"color":0},{"x":4,"y":5,"color":1},{"x":4,"y":4,"color":1}],"doors":[{"x":4,"y":4,"open":true}]}
+,
+{"players":[{"color":0,"name":"Martynas","state":"Veikia"},{"color":1,"name":"Martynas","state":"Veikia"}],"figures":[{"x":4,"y":1,"color":0},{"x":4,"y":4,"color":0},{"x":4,"y":5,"color":1},{"x":4,"y":4,"color":1}],"doors":[{"x":4,"y":4,"open":true}]}
+,
+{"players":[{"color":0,"name":"Martynas","state":"Veikia"},{"color":1,"name":"Martynas","state":"Laimėjo"}],"figures":[{"x":4,"y":1,"color":0},{"x":4,"y":4,"color":0}],"doors":[{"x":4,"y":4,"open":false}]}
+,
+]
+
+
 	var intervalHandler;
 
 	function run() {
