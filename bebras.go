@@ -82,19 +82,20 @@ type program struct {
 }
 
 func (p *program) kill() {
-	err := exec.Command(fmt.Sprintf("kill -9 -p %d", p.pid)).Run()
+	err := exec.Command("kill", "-9", "-p", strconv.Itoa(p.pid)).Run()
 	if err != nil {
 		log.Println("Error killing", p, "process")
 	}
 }
 
 func (p *program) time() float64 {
-	out, err := exec.Command(fmt.Sprintf("ps -p %d -o time | tail -n 1", p.pid)).Output()
+	out, err := exec.Command("ps", "-p", strconv.Itoa(p.pid), "-o", "time").Output()
 	if err != nil {
 		log.Println("Program", p, "time check failed:", err)
 		return -1
 	}
-	parts := strings.Split(string(out), ":")
+	lines := strings.Split(string(out), "\n")
+	parts := strings.Split(lines[1], ":")
 	if len(parts) == 0 {
 		log.Println("Program", p, "time check failed:", err)
 		return -1
