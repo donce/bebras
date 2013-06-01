@@ -135,6 +135,7 @@ func main() {
 			doors[c] = true
 		}
 	}
+	fmt.Println("[")
 	outputJson(programs, doors, players)
 	running = len(players)
 	openDoors := *D
@@ -192,6 +193,7 @@ func main() {
 		}
 		outputJson(programs, doors, players)
 	}
+	fmt.Println("]")
 }
 
 type figure struct {
@@ -226,4 +228,5 @@ func outputJson(programs []*program, doors map[coordinates]bool, players []playe
 		panic(err)
 	}
 	fmt.Println(string(output))
+	fmt.Println(",")
 }
