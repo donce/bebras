@@ -220,9 +220,9 @@ func outputJson(programs []*program, doors map[coordinates]bool, players []playe
 		doorSlice = append(doorSlice, door{c.x, c.y, state})
 	}
 	output, err := json.Marshal(struct {
-		Players []player
-		Figures []figure
-		Doors   []door
+		Players []player `json:"players"`
+		Figures []figure `json:"figures"`
+		Doors   []door `json:"doors"`
 	}{players, figures, doorSlice})
 	if err != nil {
 		panic(err)
