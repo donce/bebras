@@ -40,9 +40,9 @@
 		try {
 			var table = document.getElementById(GAME_TABLE_ID);
 			var rows = table.getElementsByTagName(ROW);
-			var row = rows[parseInt(x, 10) - 1];
+			var row = rows[ROWS_COUNT - parseInt(y, 10)];
 			var cells = row.getElementsByTagName(CELL);
-			var cell = cells[parseInt(y, 10) - 1];
+			var cell = cells[parseInt(x, 10) - 1];
 			return cell;
 		}catch(error) {
 			
@@ -189,7 +189,7 @@
 	
 	// table size parameters
 	var COLUMNS_COUNT = 10;
-	var ROWS_COUNT = 5;
+	var ROWS_COUNT = 10;
 
 	//game states
 	var game = [
