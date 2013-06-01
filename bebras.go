@@ -37,10 +37,10 @@ func (s State) MarshalJSON() ([]byte, error) {
 }
 
 type player struct {
-	Color    int
-	Name     string
+	Color    int `json:"color"`
+	Name     string `json:"name"`
 	programs [2]*program
-	State    State
+	State    State `json:"state"`
 }
 
 var running int
@@ -111,10 +111,11 @@ func main() {
 		for j := 0; j < 2; j++ {
 			players[i].programs[j] = &program{
 				coordinates: rndCoords(),
-				input:       open(tokens[j*2]),
 				output:      create(tokens[j*2+1]),
+				input:       open(tokens[j*2]),
 				player:      &players[i],
 			}
+			fmt.Fprintln(players[i].programs[j].output, *W, *H)
 			programs = append(programs, players[i].programs[j])
 		}
 	}
@@ -142,7 +143,7 @@ func main() {
 		if p.player.State != StateRunning {
 			continue
 		}
-		fmt.Fprintln(p.output, running)
+		fmt.Fprintln(p.output, running * 2)
 		fmt.Fprintln(p.output, id+1, p.x, p.y)
 		for id2, i := range perm {
 			if p2 := programs[i]; id2 != id && p2.player.State == StateRunning {
@@ -161,12 +162,24 @@ func main() {
 		switch action {
 		case "A":
 			p.y--
+			if p.y < 1 {
+				p.y = *H
+			}
 		case "V":
 			p.y++
+			if p.y > *H {
+				p.y = *H
+			}
 		case "K":
 			p.x--
+			if p.x < 1 {
+				p.x = *W
+			}
 		case "D":
 			p.x++
+			if p.x > *W {
+				p.x = 0
+			}
 		case "S":
 		default:
 			log.Println("Invalid action", action)
@@ -181,12 +194,15 @@ func main() {
 }
 
 type figure struct {
-	X, Y, Color int
+	X int `json:"x"`
+	Y int `json:"y"`
+	Color int `json:"color"`
 }
 
 type door struct {
-	X, Y int
-	Open bool
+	X int `json:"x"`
+	Y int `json:"y"`
+	Open bool `json:"open"`
 }
 
 func outputJson(programs []*program, doors map[coordinates]bool, players []player) {
