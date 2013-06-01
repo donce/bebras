@@ -8,6 +8,8 @@ import (
 	"log"
 	"math/rand"
 	"os"
+	"os/exec"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -17,6 +19,8 @@ var H = flag.Int("h", 100, "height of the board")
 var D = flag.Int("d", 1, "number of doors")
 
 type State int
+
+var ticker = time.Tick(1 * time.Minute)
 
 const (
 	StateRunning State = iota
@@ -37,7 +41,7 @@ func (s State) MarshalJSON() ([]byte, error) {
 }
 
 type player struct {
-	Color    int `json:"color"`
+	Color    int    `json:"color"`
 	Name     string `json:"name"`
 	programs [2]*program
 	State    State `json:"state"`
@@ -67,6 +71,32 @@ type program struct {
 	coordinates
 	input, output *os.File
 	player        *player
+	pid           int
+}
+
+func (p *program) time() float64 {
+	out, err := exec.Command(fmt.Sprintf("ps -p %d -o time | tail -n 1", p.pid)).Output()
+	if err != nil {
+		log.Println("Program", p, "time check failed:", err)
+		return -1
+	}
+	parts := strings.Split(string(out), ":")
+	if len(parts) == 0 {
+		log.Println("Program", p, "time check failed:", err)
+		return -1
+	}
+	var res, mul float64
+	mul = 1
+	for i := len(parts) - 1; i >= 0; i-- {
+		f, err := strconv.ParseFloat(parts[i], 64)
+		if len(parts) == 0 {
+			log.Println("Program", p, "time check failed:", err)
+			return -1
+		}
+		res += f * mul
+		mul *= 60
+	}
+	return res
 }
 
 func open(file string) *os.File {
@@ -103,17 +133,22 @@ func main() {
 	var programs []*program
 	scanner := bufio.NewScanner(data)
 	for i := 0; scanner.Scan(); i++ {
-		tokens := strings.SplitN(scanner.Text(), " ", 5)
-		if len(tokens) != 5 {
+		tokens := strings.SplitN(scanner.Text(), " ", 6)
+		if len(tokens) != 6 {
 			panic("Invalid player definition")
 		}
 		players = append(players, player{Name: tokens[4], Color: i})
+		pid, err := strconv.Atoi(tokens[0])
+		if err != nil {
+			panic("Invalid PID")
+		}
 		for j := 0; j < 2; j++ {
 			players[i].programs[j] = &program{
 				coordinates: rndCoords(),
-				output:      create(tokens[j*2+1]),
-				input:       open(tokens[j*2]),
+				output:      create(tokens[j*2+2]),
+				input:       open(tokens[j*2+1]),
 				player:      &players[i],
+				pid:         pid,
 			}
 			fmt.Fprintln(players[i].programs[j].output, *W, *H)
 			programs = append(programs, players[i].programs[j])
@@ -144,7 +179,7 @@ func main() {
 		if p.player.State != StateRunning {
 			continue
 		}
-		fmt.Fprintln(p.output, running * 2)
+		fmt.Fprintln(p.output, running*2)
 		fmt.Fprintln(p.output, id+1, p.x, p.y)
 		for id2, i := range perm {
 			if p2 := programs[i]; id2 != id && p2.player.State == StateRunning {
@@ -157,9 +192,28 @@ func main() {
 				fmt.Fprintln(p.output, d.x, d.y)
 			}
 		}
-		// TODO: laiko limitas
+		start := p.time()
 		var action string
-		fmt.Fscan(p.input, &action)
+		ch := make(chan bool)
+		go func() {
+			_, err := fmt.Fscan(p.input, &action)
+			if err != nil {
+				log.Println("Failed reading input from", p, "-", err)
+				ch <- false
+			}
+			ch <- true
+		}()
+		for repeat := true; repeat; {
+			select {
+			case success := <-ch:
+				repeat = false
+			case <-ticker:
+				if p.time()-start > 1 {
+					repeat = false
+					log.Println("Time limit exceeded", p)
+				}
+			}
+		}
 		switch action {
 		case "A":
 			p.y--
@@ -197,14 +251,14 @@ func main() {
 }
 
 type figure struct {
-	X int `json:"x"`
-	Y int `json:"y"`
+	X     int `json:"x"`
+	Y     int `json:"y"`
 	Color int `json:"color"`
 }
 
 type door struct {
-	X int `json:"x"`
-	Y int `json:"y"`
+	X    int  `json:"x"`
+	Y    int  `json:"y"`
 	Open bool `json:"open"`
 }
 
@@ -222,7 +276,7 @@ func outputJson(programs []*program, doors map[coordinates]bool, players []playe
 	output, err := json.Marshal(struct {
 		Players []player `json:"players"`
 		Figures []figure `json:"figures"`
-		Doors   []door `json:"doors"`
+		Doors   []door   `json:"doors"`
 	}{players, figures, doorSlice})
 	if err != nil {
 		panic(err)
