@@ -188,6 +188,7 @@ func main() {
 		if doors[p.coordinates] && p.player.met() {
 			p.player.win()
 			doors[p.coordinates] = false
+			openDoors--
 		}
 		outputJson(programs, doors, players)
 	}
